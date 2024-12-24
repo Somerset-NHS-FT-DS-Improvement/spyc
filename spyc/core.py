@@ -21,6 +21,8 @@ class SPC:
         Seasonal adjustments (control defined for each season) can be set by using the seasonal parameter, if present.
         Trends are not automatically handled and should ideally be removed prior to feeding in dataset, if present.
         Control lines can be re-calculated following a process change, using the add_process_change_date() method.
+	
+	Inputs:
 
         - data_in (Pandas.DataFrame): Datetime index with frequency attribute.
         - target_col (str): Must exist in data_in.
