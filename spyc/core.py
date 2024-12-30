@@ -46,6 +46,7 @@ class SPC:
 
         # Add seasonal column to data_in and store unique seasonal periods
         if self.seasonal:
+            # What made you decide to split these functions away from the class? (add_seasonal, group by seasonal etc...)
             self.data_in['season'] = _add_seasonal_column(self.data_in, self.seasonal)  # Add season column
             self.seasonal_periods = self.data_in['season'].unique()  # Store unique seasonal values
 
@@ -73,6 +74,7 @@ class SPC:
 
         # Default max. of previous fix_control_end_dt to change_date, if none provided, or date exceeds change_date/
         if self.fix_control_end_dt == self.data_in.index.max() or self.fix_control_end_dt > fix_control_start_dt:
+            # Dict keys are only guaranteed to be in a consistent order since Python 3.6, just something to be aware of when thinking about the package requirements
             most_recent_key = list(self.control_line_dates.keys())[-1]  # Get previous change date
             self.control_line_dates[most_recent_key]['cl_end_data'] = change_date  # Update end date
 
@@ -154,6 +156,7 @@ class SPC:
             prev_date = self.data_in.index.min()  # Initialise previous change date to start of data
 
             for idx, cd in enumerate(change_dates):
+                # Do these need to be copies? I wonder if it'd be better to store slices here (see https://www.w3schools.com/python/ref_func_slice.asp)
                 block = self.data_in[(self.data_in.index >= pd.to_datetime(prev_date)) & \
                                      (self.data_in.index < pd.to_datetime(cd))].copy()
                 data_blocks_list.append(block)
@@ -199,6 +202,7 @@ class SPC:
 
             if self.seasonal and not check_data_points_per_season:
                 self.__seasonal_adjustment_passed[idx] = True
+                # This probably needs to be a warning rather than a print statement
                 print('Not enough data to build reliable estimate of mean for each season. Global mean will be '
                       'estimated until more data is added (control line calculation period is changed, or more data '
                       'collected)')
