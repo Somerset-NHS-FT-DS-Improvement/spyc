@@ -25,7 +25,7 @@ def x_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
     ucl = cl + 3 * (mr_cl / d2)
     lcl = cl - 3 * (mr_cl / d2)
 
-    return {'process': data[target_col], 'CL': cl, "UCL": ucl, "LCL": lcl}
+    return {"process": data[target_col], "CL": cl, "UCL": ucl, "LCL": lcl}
 
 
 def mr_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
@@ -48,4 +48,9 @@ def mr_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
     mr_lcl = 0
     mr_ucl = 3.27 * mr_cl
 
-    return {'process': np.abs(data[target_col].diff()), 'CL': mr_cl, "UCL": mr_ucl, "LCL": mr_lcl}
+    return {
+        "process": np.abs(data[target_col].diff()),
+        "CL": mr_cl,
+        "UCL": mr_ucl,
+        "LCL": mr_lcl,
+    }

@@ -21,7 +21,7 @@ def _add_seasonal_column(data, seasonal_int):
     elif seasonal_int == 4:
         return data.index.quarter
     else:
-        print('none')
+        print("none")
 
 
 def _data_points_per_season(seasonal_grouped_data):

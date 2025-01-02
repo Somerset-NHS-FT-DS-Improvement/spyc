@@ -7,9 +7,9 @@ def convert_to_timestamp(data):
     for key, value in data.items():
         new_key = pd.Timestamp(key)
         new_value = {
-            'cl_start_data': pd.Timestamp(value['cl_start_data']),
-            'cl_end_data': pd.Timestamp(value['cl_end_data']),
-            'process_names': value['process_names']
+            "cl_start_data": pd.Timestamp(value["cl_start_data"]),
+            "cl_end_data": pd.Timestamp(value["cl_end_data"]),
+            "process_names": value["process_names"],
         }
         consistent_data[new_key] = new_value
 
