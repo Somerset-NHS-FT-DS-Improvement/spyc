@@ -66,7 +66,7 @@ class SPC:
                                                               'cl_end_data': self.fix_control_end_dt,
                                                               'process_names': None}}
 
-        self.__data_blocks_list = None
+        self.__change_dates_list = None
         self.__process_change_dates = None
         self.__seasonal_adjustment_passed = {}
 
@@ -141,35 +141,37 @@ class SPC:
         self.__process_change_dates = process_change_dates[1:] if len(process_change_dates) > 1 else None
 
         # Obtain list of datasets for each process_change_dates periods, if add_process_change() called.
-        self.__data_blocks_list = self.__split_data_by_change_dates()
+        self.__change_dates_list = self.__get_change_dates()
 
         self.__calculate_control_lines(spc_calc_func=spc_calc_func)
 
         return self.__test_for_control(rules_dict=rules_dict)
 
-    def __split_data_by_change_dates(self):
+    def __get_change_dates(self):
 
         """
-        Splits dataframe into data "blocks", following each process change date
-        (if process_change_dates values provided). Otherwise, the original dataframe is returned, as the single element
-        in a list.
+        Returns list of tuples of type (start_change_date, end_change_date). If add_process_change_date() not called, 
+        a single element is returned with start/ end date of data_in.
         """
+
+        data_start = self.data_in.index.min()
+        data_end = self.data_in.index.max()
 
         if not self.__process_change_dates:
-            return [self.data_in]  # No change dates, return as a single block
+            return [(data_start, data_end)]  # No change dates, return start/ end date
 
         change_dates = sorted(self.__process_change_dates)
-        data_blocks_list = []  # Store data blocks in list
-        prev_date = self.data_in.index.min()  # Set previous change date to start of data
+        change_dates_list = []  # Store data blocks in list
+        prev_date = data_start  # Set previous change date to start of data
 
         for cd in change_dates:
-            data_blocks_list.append((prev_date, cd))
+            change_dates_list.append((prev_date, cd))
             prev_date = cd  # Update prev_date to the current change date
 
         # Append last data block
-        data_blocks_list.append((prev_date, cd))
+        change_dates_list.append((cd, data_end))
 
-        return data_blocks_list
+        return change_dates_list
 
     def __calculate_control_lines(self, spc_calc_func):
 
@@ -180,7 +182,7 @@ class SPC:
         cl_df = pd.DataFrame()
         cl_df.index = self.data_in.index
         cl_df[['CL', 'LCL', 'UCL', 'process', 'period', 'period_name']] = np.nan
-        cl_df['period'] = cl_df['period'].fillna(-1).astype(int)  # Ensure int is stored rather than float
+        cl_df['period'] = cl_df['period'].astype(int)  # Ensure int is stored rather than float
         cl_df['period_name'] = cl_df['period_name'].astype(object)
         if self.seasonal:
             cl_df['season'] = self.data_in['season'].values  # Add season column
@@ -189,11 +191,11 @@ class SPC:
         cl_dictionary = {}
 
         # Use slices instead of copying data frames
-        for idx, date_tuple in enumerate(self.__data_blocks_list):
+        for idx, date_tuple in enumerate(self.__change_dates_list):
 
-            block_start_date, block_end_date = self.__data_blocks_list[idx]
+            period_start_date, period_end_date = date_tuple
 
-            df = self.data_in.loc[block_start_date: block_end_date]
+            df = self.data_in.loc[period_start_date: period_end_date]  # Access dataframe for given period
 
             start_date_dict = self.control_line_dates.get(df.index[0], None)
             end_date_dict = self.control_line_dates.get(df.index[0], None)
@@ -229,8 +231,7 @@ class SPC:
                 cl_df.loc[df.index, 'UCL'] = df['season'].map(lambda s: cl_dict[s]['UCL'])
 
                 for sn in self.seasonal_periods:
-                    df.loc[df['season'] == sn, 'process'] = cl_dict[sn]['process']
-                cl_df.loc[df.index, 'process'] = df['process'].values
+                    cl_df.loc[(cl_df['season'] == sn) & (cl_df.index.isin(df.index)), 'process'] = cl_dict[sn]['process']
 
             else:
                 cl_dict = spc_calc_func(df, self.target_col, start_date, end_date)
