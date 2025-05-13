@@ -1,24 +1,30 @@
-
 import pandas as pd
 import numpy as np
 import pytest
 from spyc.control_rules import _rules_func
 
-data = np.random.randn(100)
-index = pd.date_range(start='2023-01-01', periods=100, freq='D')
-df = pd.DataFrame()
-df.index = index
-df['target'] = data
+
+@pytest.fixture
+def df():
     
-cl = df['target'].mean()
-ucl = cl + 3 * df['target'].std()
-lcl = cl - 3 * df['target'].std()
+    """
+    Example dataset.
+    """
+    
+    data = np.random.randn(100)
+    index = pd.date_range(start='2023-01-01', periods=100, freq='D')
+    
+    df = pd.DataFrame()
+    df.index = index
+    
+    df['target'] = data
+    df['cl'] = df['target'].mean()
+    df['lcl'] = df['cl'] - 3 * df['target'].std()
+    df['ucl'] = df['cl'] + 3 * df['target'].std()
+    return df
 
-df['cl'] = cl
-df['lcl'] = lcl
-df['ucl'] = ucl
 
-def test_rule_1_violation():
+def test_rule_1_violation(df):
 
     series = df['target']
     cl = df['cl'] 
@@ -31,7 +37,7 @@ def test_rule_1_violation():
     
     assert "Rule 1 violation" in result
 
-def test_rule_2_violation():
+def test_rule_2_violation(df):
 
     series = df['target']
     cl = df['cl'] 
@@ -44,7 +50,7 @@ def test_rule_2_violation():
     
     assert "Rule 2 violation" in result
 
-def test_rule_3_violation():
+def test_rule_3_violation(df):
 
     series = df['target']
     cl = df['cl'] 
@@ -57,7 +63,7 @@ def test_rule_3_violation():
     
     assert "Rule 3 violation" in result
 
-def test_rule_4_violation():
+def test_rule_4_violation(df):
 
     series = df['target']
     cl = df['cl'] 
@@ -70,7 +76,7 @@ def test_rule_4_violation():
     
     assert "Rule 4 violation" in result
 
-def test_rule_5_violation():
+def test_rule_5_violation(df):
 
     series = df['target']
     cl = df['cl'] 

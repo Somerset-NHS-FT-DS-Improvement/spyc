@@ -4,8 +4,12 @@ import pytest
 from spyc.helpers import convert_to_timestamp, get_data_subset
 from spyc import SPC
 
-def test_spc_initialisation():
-
+@pytest.fixture
+def df():
+    
+    """
+    Example dataset.
+    """
     
     data = {
         'date': pd.date_range(start='2023-01-01', periods=100, freq='D'),
@@ -13,6 +17,10 @@ def test_spc_initialisation():
     }
     df = pd.DataFrame(data)
     df.set_index('date', inplace=True)
+    return df
+
+
+def test_spc_initialisation(df):
     
     spc = SPC(data_in=df, target_col='measurement')
     
@@ -29,15 +37,7 @@ def test_spc_initialisation():
         }
     }
 
-def test_add_process_change_date():
-
-    
-    data = {
-        'date': pd.date_range(start='2023-01-01', periods=100, freq='D'),
-        'measurement': np.random.randn(100)
-    }
-    df = pd.DataFrame(data)
-    df.set_index('date', inplace=True)
+def test_add_process_change_date(df):
     
     spc = SPC(data_in=df, target_col='measurement')
     
@@ -56,14 +56,7 @@ def test_add_process_change_date():
     
     assert spc.control_line_dates_dict == expected_dict
 
-def test_add_seasonality():
-
-    data = {
-        'date': pd.date_range(start='2023-01-01', periods=100, freq='D'),
-        'measurement': np.random.randn(100)
-    }
-    df = pd.DataFrame(data)
-    df.set_index('date', inplace=True)
+def test_add_seasonality(df):
     
     spc = SPC(data_in=df, target_col='measurement')
     
@@ -75,14 +68,7 @@ def test_add_seasonality():
     assert spc.seasonal == True
     assert spc.seasonal_periods.tolist() == [1, 2, 3, 4]
 
-def test_calculate_spc():
-
-    data = {
-        'date': pd.date_range(start='2023-01-01', periods=100, freq='D'),
-        'measurement': np.random.randn(100)
-    }
-    df = pd.DataFrame(data)
-    df.set_index('date', inplace=True)
+def test_calculate_spc(df):
     
     spc = SPC(data_in=df, target_col='measurement')
     
