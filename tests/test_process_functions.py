@@ -50,6 +50,8 @@ def test_mr_chart(df):
 
 
 def test_p_chart(df):
+    
+    df['sample_size'] = np.random.randint(50, 100, size=100) # Add sample size col
 
     cl_start_dt = "2023-01-01"
     cl_end_dt = "2023-01-31"
