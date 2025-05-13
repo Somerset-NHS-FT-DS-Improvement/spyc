@@ -2,7 +2,9 @@ import pandas as pd
 
 
 def convert_to_timestamp(data_dict):
-    # Convert all date and time values to Timestamp objects
+    """
+    Convert all date and time values to Timestamp objects.
+    """
     consistent_data = {}
     for key, value in data_dict.items():
         new_key = pd.Timestamp(key)
@@ -16,7 +18,9 @@ def convert_to_timestamp(data_dict):
 
 
 def get_data_subset(data, cl_start_dt=None, cl_end_dt=None):
-    # Helper function to subset data based on start and end control line dates.
+    """
+    Helper function to subset data based on start and end control line dates.
+    """
 
     if cl_start_dt is None:
         cl_start_dt = data.index.min()

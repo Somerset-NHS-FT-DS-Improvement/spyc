@@ -5,8 +5,8 @@ def _rules_func(input_series, cl, lcl, ucl, rules_to_test_dict=None):
     """
     Set of five rules to test for process control.
     """
-    sigma = (ucl - cl) / 3  # Calculate 1 sigma, based on upper control and center line
-    violations = {}  # Store violations as dict. with list of dates as values.
+    sigma = (ucl - cl) / 3  # Calculate 1 sigma (Pandas.Series), based on upper control and center line
+    violations = {}  # Store violations as dictionary (list of dates as values).
 
     # Rule 1: Point outside the +/- 3 sigma limits
     if rules_to_test_dict["Rule 1"]:

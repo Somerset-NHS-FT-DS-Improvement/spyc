@@ -61,15 +61,14 @@ class SPC:
 
         self.seasonal = False
         self.seasonal_periods = None
-        self.__change_dates_list = None
-        self.__seasonal_adjustment_passed = {}
-
         self.control_line_dates_dict = {
             self.data_in.index.min(): {
                 "cl_start_data": self.fix_control_start_dt,
                 "cl_end_data": self.fix_control_end_dt,
             }
         }
+        self.__change_dates_list = None
+        self.__seasonal_adjustment_passed = {}
 
     def add_process_change_date(
         self,
