@@ -114,6 +114,7 @@ class SPC:
                 ],
                 default=None,
             )
+            
             self.control_line_dates_dict[most_recent_key][
                 "cl_end_data"
             ] = change_date  # Update end date
@@ -224,6 +225,33 @@ class SPC:
         change_dates_list.append((cd, data_end))
 
         return change_dates_list
+    
+    def __data_points_per_season_check(self, df, start_date, end_date):
+        
+        """
+        Checks sufficient data to estimate control line calculation.
+        """
+        
+        data_points_per_season = (
+            df.loc[start_date:end_date]
+            .groupby(by="season")
+            .size()
+            .reindex(self.seasonal_periods, fill_value=0)
+        )
+        data_above_threshold_bool = (
+            data_points_per_season >= self.min_data_req
+        ).all()
+
+        if not data_above_threshold_bool:
+            self.__seasonal_adjustment_passed[idx] = True
+            warnings.warn(
+                f"Not enough data to build reliable estimate of mean for each season following {start_date} change period. Global mean will be "
+                "estimated until more data is added (control line calculation period is changed, or "
+                "more data collected)",
+                UserWarning,
+            )
+            
+        return data_above_threshold_bool
 
     def __calculate_control_lines(
         self, spc_calc_func: callable
@@ -265,27 +293,10 @@ class SPC:
 
             start_date = cl_date_dict["cl_start_data"]
             end_date = cl_date_dict["cl_end_data"]
-
-            # Check if data points per season are sufficient (using min_data_req argument)
+            
+            # Check number of data points per season exceeds min_data_req.
             if self.seasonal:
-                data_points_per_season = (
-                    df.loc[start_date:end_date]
-                    .groupby(by="season")
-                    .size()
-                    .reindex(self.seasonal_periods, fill_value=0)
-                )
-                data_above_threshold_bool = (
-                    data_points_per_season >= self.min_data_req
-                ).all()
-
-            if self.seasonal and not data_above_threshold_bool:
-                self.__seasonal_adjustment_passed[idx] = True
-                warnings.warn(
-                    f"Not enough data to build reliable estimate of mean for each season following {start_date} change period. Global mean will be "
-                    "estimated until more data is added (control line calculation period is changed, or "
-                    "more data collected)",
-                    UserWarning,
-                )
+                data_above_threshold_bool = self.__data_points_per_season_check(df, start_date, end_date)
             
             # Defining dictionary of required kwargs for spc_calc_func.
             kwargs = {
@@ -351,13 +362,7 @@ class SPC:
 
             if self.seasonal and not self.__seasonal_adjustment_passed.get(idx, False):
 
-                for s in self.seasonal_periods:
-
-                    seasonal_filtered = df_period_filtered[
-                        df_period_filtered.season == s
-                    ]  # Filter for each season
-
-                    # Test control for each season
+                for _, seasonal_filtered in df_period_filtered.groupby("season"):
                     violations = _rules_func(
                         seasonal_filtered["process"],
                         seasonal_filtered["CL"],
