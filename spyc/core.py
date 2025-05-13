@@ -31,6 +31,11 @@ class SPC:
             - target_col (str): The column name in the data containing the target measurements.
             - fix_control_start_dt (str, optional): If None, reverts to the start of data (defaults to None).
             - fix_control_end_dt (str, optional): If None, reverts to the end of data (defaults to None).
+            
+        Attributes:
+            - seasonal (Bool): Whether seasonal patterns are used (set to True if add_seasonality called).
+            - seasonal_periods (list of int, float, or bool): List of unique seasonal periods (if seasonal).
+            - control_line_dates_dict (dict): Store dates of process changes (if add_process_change_date called).
         """
         
         
@@ -55,22 +60,21 @@ class SPC:
             else self.data_in.index.max()
         )
 
-        self.seasonal = False  #  Bool, whether seasonal patterns are used 
-                               # (True if add_seasonality called).
-        self.seasonal_periods = None  #  Unique seasonal periods (if seasonal)
+        self.seasonal = False  
+        self.seasonal_periods = None
         self.__change_dates_list = (
-            None  # List of tuples storing date/ end change date(s).
+            None  
         )
         self.__seasonal_adjustment_passed = (
             {}
-        )  # Storing bools for whether seasonal adjustment will be made (based on min. required data points).
+        )  
 
         self.control_line_dates_dict = {
             self.data_in.index.min(): {
                 "cl_start_data": self.fix_control_start_dt,
                 "cl_end_data": self.fix_control_end_dt
             }
-        }  #  Store dates of change (if add_process_change_date called).
+        } 
 
     def add_process_change_date(
         self,
@@ -224,7 +228,7 @@ class SPC:
 
         return change_dates_list
     
-    def __data_points_per_season_check(self, df, start_date, end_date):
+    def __data_points_per_season_check(self, df, start_date, end_date) -> bool:
         
         """
         Checks sufficient data to estimate control line calculation.
