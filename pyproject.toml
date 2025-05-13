@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spyc"
+version = "0.1.0"
+authors = [
+    { name="Ben Holdsworth", email="benjamin.Holdsworth@somersetft.nhs.uk" },
+    { name="SFT Data Science", email="Data.Science@somersetft.nhs.uk"}
+]
+description = "Statistical Process Control library for SFT analytics."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/Somerset-NHS-FT-DS-Improvement/spyc"
+Issues = "https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]

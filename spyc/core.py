@@ -19,28 +19,31 @@ class SPC:
         A tool for streamlining Statistical Process Control (SPC) analytics.
 
         Functionality:
-            - Recalculates control lines following process changes.
+            - Re-calculates control lines following process changes. The control lines can be calculated
+              on specific periods (to avoid training on non-representitive data).
             - Generalisable for custom or default control chart types, via custom functions.
             - Captures seasonal patterns (e.g., daily, weekly, monthly, or custom, such as weekend) to negate the need
               of separate charts for each seasonal period. Note: Trends are not automatically handled and should ideally
               be removed prior to feeding in the dataset, if present.
 
         Inputs:
-            - data_in (pd.DataFrame): The input data containing the process measurements (with a DateTime index).
+            - data_in (pd.DataFrame): The input data containing the process measurements (with DateTimeIndex).
             - target_col (str): The column name in the data containing the target measurements.
             - fix_control_start_dt (str, optional): If None, reverts to the start of data (defaults to None).
             - fix_control_end_dt (str, optional): If None, reverts to the end of data (defaults to None).
         """
-
+        
+        
+        assert isinstance(data_in, pd.DataFrame), "Input is not a pandas DataFrame."
+        assert target_col in data_in.columns, "Column not found in input dataframe."
+        assert isinstance(
+            data_in.index, pd.DatetimeIndex
+        ), "Dataframe must have DateTime Index"
+        
         self.data_in = data_in.copy()
         self.target_col = target_col
 
-        assert target_col in data_in.columns, "Column not found in input dataframe!"
-        assert isinstance(
-            self.data_in.index, pd.DatetimeIndex
-        ), "Dataframe must have DateTime index"
-
-        # If control start/end values not set, default to start/end dates of data_in
+        # Defaults to start/end dates of data_in if control start/end values not set.
         self.fix_control_start_dt = (
             fix_control_start_dt
             if fix_control_start_dt is not None
@@ -52,8 +55,9 @@ class SPC:
             else self.data_in.index.max()
         )
 
-        self.seasonal = False  #  Bool, whether seasonal patterns are used (True if add_seasonality called).
-        self.seasonal_periods = None  #  Unique seasonal periods (if used)
+        self.seasonal = False  #  Bool, whether seasonal patterns are used 
+                               # (True if add_seasonality called).
+        self.seasonal_periods = None  #  Unique seasonal periods (if seasonal)
         self.__change_dates_list = (
             None  # List of tuples storing date/ end change date(s).
         )
@@ -64,8 +68,7 @@ class SPC:
         self.control_line_dates_dict = {
             self.data_in.index.min(): {
                 "cl_start_data": self.fix_control_start_dt,
-                "cl_end_data": self.fix_control_end_dt,
-                "process_names": None,
+                "cl_end_data": self.fix_control_end_dt
             }
         }  #  Store dates of change (if add_process_change_date called).
 
@@ -73,8 +76,7 @@ class SPC:
         self,
         change_date: str,
         fix_control_start_dt: str | None = None,
-        fix_control_end_dt: str | None = None,
-        process_name: str | None = None,
+        fix_control_end_dt: str | None = None
     ) -> None:
         """
         Optional Method. Allows control lines to be re-calculated following a systematic change to the measured process.
@@ -86,8 +88,6 @@ class SPC:
               If None, it defaults to the change_date.
             - fix_control_end_dt (str or pd.Timestamp, optional): The end date for the control line calculation.
               If None, it defaults to the end of the data.
-            - process_name (str, optional): A name for the process change. This can be used to identify different
-              process changes.
         """
 
         #  Check change_date are within data range.
@@ -121,27 +121,26 @@ class SPC:
         # Add new change_date to dict.
         self.control_line_dates_dict[change_date] = {
             "cl_start_data": fix_control_start_dt,
-            "cl_end_data": fix_control_end_dt,
-            "process_names": process_name,
+            "cl_end_data": fix_control_end_dt
         }
 
         self.control_line_dates_dict = convert_to_timestamp(
             self.control_line_dates_dict
         )
 
-    def add_seasonality(self, season_func: callable):
+    def add_seasonality(self, season_func: callable, min_data_req: int = 15):
         """
         Optional Method. Include seasonal variation in control line calculations.
 
         Inputs:
-            - season_func (function): A function that accepts DateTime index and returns unique value
+            - season_func (function): A function that accepts DateTime Index and returns unique value
               for each seasonal period.
         """
 
         self.seasonal_func = season_func
+        self.min_data_req = min_data_req
 
         # Add seasonal column to data_in and store unique seasonal periods
-
         self.data_in["season"] = season_func(self.data_in.index)
 
         self.seasonal_periods = self.data_in["season"].unique()
@@ -155,12 +154,13 @@ class SPC:
         rule_2: bool = False,
         rule_3: bool = False,
         rule_4: bool = False,
-        rule_5: bool = False,
-        min_data_req: int = 15,
+        rule_5: bool = False
     ) -> pd.DataFrame:
         """
         Convenience function for calculating control lines (including re-calculation, if specified) and
         tests data for control (up to 5 tests, defined in control_rules.py).
+        
+        Not all rules are appropriate for all charts. 
 
         Inputs:
             - spc_calc_func (function): A function that calculates the SPC metrics. It must return a dictionary
@@ -195,7 +195,7 @@ class SPC:
         self.__change_dates_list = self.__get_change_dates()
 
         self.__calculate_control_lines(
-            spc_calc_func=spc_calc_func, min_data_req=min_data_req
+            spc_calc_func=spc_calc_func
         )
 
         return self.__test_for_control(rules_dict=rules_dict)
@@ -226,7 +226,7 @@ class SPC:
         return change_dates_list
 
     def __calculate_control_lines(
-        self, spc_calc_func: callable, min_data_req: int
+        self, spc_calc_func: callable
     ) -> None:
         """
         Calculates control lines for each period (single dataset if no process_change_dates set).
@@ -235,7 +235,7 @@ class SPC:
         cl_df = pd.DataFrame()
 
         # Removing dupliate dates if calculating subgroup charts
-        cl_df.index = self.data_in[~self.data_in.index.duplicated(keep="first")].index
+        cl_df.index = self.data_in.index
         cl_df[["CL", "LCL", "UCL", "process", "period"]] = np.nan
         cl_df["period"] = (
             cl_df["period"].fillna(-1).astype(int)
@@ -243,7 +243,7 @@ class SPC:
         if self.seasonal:
             cl_df["season"] = self.seasonal_func(cl_df.index)
 
-        # Store control lines in dictionary for quick reference
+        # Control lines stored in dictionary
         cl_dictionary = {}
 
         for idx, date_tuple in enumerate(self.__change_dates_list):
@@ -254,19 +254,19 @@ class SPC:
                 period_start_date:period_end_date
             ]  # Access dataframe for given period
 
-            start_date_dict = self.control_line_dates_dict.get(df.index[0], None)
-            end_date_dict = self.control_line_dates_dict.get(df.index[0], None)
+            # Period control lines calculated on
+            cl_date_dict = self.control_line_dates_dict.get(df.index[0], None)
 
-            if start_date_dict is None or end_date_dict is None:
+            if cl_date_dict is None:
                 raise ValueError(
                     f"Warning: Control line dates not found for change date {df.index[0]}. Make sure "
                     f"change date is of same type as index."
                 )
 
-            start_date = start_date_dict["cl_start_data"]
-            end_date = end_date_dict["cl_end_data"]
+            start_date = cl_date_dict["cl_start_data"]
+            end_date = cl_date_dict["cl_end_data"]
 
-            # Check if data points per season are sufficient
+            # Check if data points per season are sufficient (using min_data_req argument)
             if self.seasonal:
                 data_points_per_season = (
                     df.loc[start_date:end_date]
@@ -275,7 +275,7 @@ class SPC:
                     .reindex(self.seasonal_periods, fill_value=0)
                 )
                 data_above_threshold_bool = (
-                    data_points_per_season >= min_data_req
+                    data_points_per_season >= self.min_data_req
                 ).all()
 
             if self.seasonal and not data_above_threshold_bool:
@@ -286,16 +286,23 @@ class SPC:
                     "more data collected)",
                     UserWarning,
                 )
+            
+            # Defining dictionary of required kwargs for spc_calc_func.
+            kwargs = {
+                "target_col": self.target_col,
+                "cl_start_dt": start_date,
+                "cl_end_dt": end_date,
+            }
 
-            if self.seasonal and data_above_threshold_bool:
+            if self.seasonal and data_above_threshold_bool: # Season variation applied
                 seasonal_grouped = df.groupby(by="season")
 
-                # Calculate control lines for each seasonal period
                 cl_dict = seasonal_grouped.apply(
                     lambda group: spc_calc_func(
-                        group, self.target_col, start_date, end_date
+                        data=group, **kwargs
                     )
-                )
+                ) 
+                
                 cl_dictionary[idx] = cl_dict
 
                 for sn in self.seasonal_periods:
@@ -314,8 +321,9 @@ class SPC:
                         (cl_df["season"] == sn) & (cl_df.index.isin(df.index)), "UCL"
                     ] = cl_dict[sn]["UCL"]
 
-            else:
-                cl_dict = spc_calc_func(df, self.target_col, start_date, end_date)
+            else: # No seasonality
+                cl_dict = spc_calc_func(data=df, **kwargs)
+                    
                 cl_dictionary[idx] = cl_dict
 
                 cl_df.loc[df.index, "CL"] = cl_dict["CL"]

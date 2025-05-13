@@ -1,3 +1,3 @@
 from .core import SPC
-from .process_functions import x_chart, mr_chart, xbar_chart
-from .spc_charts import plotly_chart
+from . import spc_functions
+from . import spc_plots

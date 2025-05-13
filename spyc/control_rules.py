@@ -18,7 +18,8 @@ def _rules_func(input_series, cl, lcl, ucl, rules_to_test_dict=None):
         rule2 = []
         for i in range(7, len(input_series)):
             subset = input_series.iloc[i - 7 : i + 1]
-            if (subset > cl).all() or (subset < cl).all():
+            cl_subset = cl.iloc[i - 7 : i + 1]
+            if (subset > cl_subset).all() or (subset < cl_subset).all():
                 rule2.append(input_series.index[i])
         violations["Rule 2 violation"] = rule2
 
@@ -36,8 +37,11 @@ def _rules_func(input_series, cl, lcl, ucl, rules_to_test_dict=None):
         rule4 = []
         for i in range(2, len(input_series)):
             subset = input_series.iloc[i - 2 : i + 1]
-            if ((subset > (cl + 2 * sigma)).sum() >= 2) or (
-                (subset < (cl - 2 * sigma)).sum() >= 2
+            cl_subset = cl.iloc[i - 2 : i + 1]
+            sigma_subset = sigma.iloc[i - 2 : i + 1]
+
+            if ((subset > (cl_subset + 2 * sigma_subset)).sum() >= 2) or (
+                (subset < (cl_subset - 2 * sigma_subset)).sum() >= 2
             ):
                 rule4.append(input_series.index[i])
         violations["Rule 4 violation"] = rule4
@@ -47,7 +51,10 @@ def _rules_func(input_series, cl, lcl, ucl, rules_to_test_dict=None):
         rule5 = []
         for i in range(14, len(input_series)):
             subset = input_series.iloc[i - 14 : i + 1]
-            if np.all(np.abs(subset - cl) <= (cl + sigma) - cl):
+            cl_subset = cl.iloc[i - 14 : i + 1]
+            sigma_subset = sigma.iloc[i - 14 : i + 1]
+            
+            if np.all(np.abs(subset - cl_subset) <= (cl_subset + sigma_subset) - cl_subset):
                 rule5.append(input_series.index[i])
         violations["Rule 5 violation"] = rule5
 

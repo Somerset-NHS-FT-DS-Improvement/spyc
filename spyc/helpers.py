@@ -1,15 +1,14 @@
 import pandas as pd
 
 
-def convert_to_timestamp(data):
+def convert_to_timestamp(data_dict):
     # Convert all date and time values to Timestamp objects
     consistent_data = {}
-    for key, value in data.items():
+    for key, value in data_dict.items():
         new_key = pd.Timestamp(key)
         new_value = {
             "cl_start_data": pd.Timestamp(value["cl_start_data"]),
-            "cl_end_data": pd.Timestamp(value["cl_end_data"]),
-            "process_names": value["process_names"],
+            "cl_end_data": pd.Timestamp(value["cl_end_data"])
         }
         consistent_data[new_key] = new_value
 
