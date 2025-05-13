@@ -58,13 +58,13 @@ def mr_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
 def p_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
     """
     Calculate control lines for P-chart (with varying control limits if sample size varies).
-    
+
     data must have column named "sample_size" and the target column must be the proportion!
     """
 
     # Get relevant date range if specified (for control lines)
     data_subset = get_data_subset(data, cl_start_dt, cl_end_dt)
-    
+
     # Upper/lower/process depends on sample size -> Need all data post cl_start_dt
     data_post_change = get_data_subset(data, cl_start_dt, data.index.max())
 
@@ -72,7 +72,7 @@ def p_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
     p_bar = data_subset[target_col].mean()
 
     # Control limits vary by sample size
-    n = data_post_change['sample_size']
+    n = data_post_change["sample_size"]
     sigma_p = np.sqrt((p_bar * (1 - p_bar)) / n)
 
     cl = p_bar

@@ -53,8 +53,10 @@ def _rules_func(input_series, cl, lcl, ucl, rules_to_test_dict=None):
             subset = input_series.iloc[i - 14 : i + 1]
             cl_subset = cl.iloc[i - 14 : i + 1]
             sigma_subset = sigma.iloc[i - 14 : i + 1]
-            
-            if np.all(np.abs(subset - cl_subset) <= (cl_subset + sigma_subset) - cl_subset):
+
+            if np.all(
+                np.abs(subset - cl_subset) <= (cl_subset + sigma_subset) - cl_subset
+            ):
                 rule5.append(input_series.index[i])
         violations["Rule 5 violation"] = rule5
 

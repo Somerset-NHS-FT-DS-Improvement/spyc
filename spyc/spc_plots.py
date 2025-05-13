@@ -11,15 +11,25 @@ def filter_out_of_control(data):
     return out_of_control
 
 
-def seaborn_chart(data, figure_title=None, figsize = (15, 5)):
+def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
 
     sns.set(style="whitegrid")
     fig, ax = plt.subplots(figsize=figsize, dpi=600)
 
-    sns.lineplot(data=data, x=data.index, y="process", ax=ax, label="Observed process", color="#00789c", linewidth=2)
+    sns.lineplot(
+        data=data,
+        x=data.index,
+        y="process",
+        ax=ax,
+        label="Observed process",
+        color="#00789c",
+        linewidth=2,
+    )
 
     ax.plot(data.index, data["CL"], color="#66a182", label="Center Line", linewidth=2)
-    ax.plot(data.index, data["UCL"], color="#d1495b", label="Control Limits", linestyle="--")
+    ax.plot(
+        data.index, data["UCL"], color="#d1495b", label="Control Limits", linestyle="--"
+    )
     ax.plot(data.index, data["LCL"], color="#d1495b", label=None, linestyle="--")
 
     out_of_control = filter_out_of_control(data)
@@ -30,7 +40,7 @@ def seaborn_chart(data, figure_title=None, figsize = (15, 5)):
         facecolors="none",
         edgecolors="#d1495b",
         linewidth=2,
-        label="Out-of-Control"
+        label="Out-of-Control",
     )
 
     if "period" in data.columns:
@@ -38,12 +48,26 @@ def seaborn_chart(data, figure_title=None, figsize = (15, 5)):
         for date in process_change_dates:
             label = data.loc[date]["period_name"]
             ax.axvline(x=date, color="#27374D", linestyle="--")
-            ax.text(date, ax.get_ylim()[1], label, rotation=90, verticalalignment='bottom', fontsize=10, color="black")
+            ax.text(
+                date,
+                ax.get_ylim()[1],
+                label,
+                rotation=90,
+                verticalalignment="bottom",
+                fontsize=10,
+                color="black",
+            )
 
     ax.set_title(figure_title)
     ax.set_xlabel(None)
     ax.set_ylabel("Measure", fontsize=12)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15), ncol=4, frameon=False, fontsize=12)
+    ax.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.15),
+        ncol=4,
+        frameon=False,
+        fontsize=12,
+    )
     ax.set_xlim(data.index.min(), data.index.max())
     fig.tight_layout()
 
