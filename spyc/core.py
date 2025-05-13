@@ -80,7 +80,6 @@ class SPC:
     ) -> None:
         """
         Optional Method. Allows control lines to be re-calculated following a systematic change to the measured process.
-        It can be called multiple times if a series of process changes occurs during the observed period.
 
         Inputs:
             - change_date (str or pd.Timestamp): The date when the process change occurred.
@@ -96,7 +95,7 @@ class SPC:
         ), "Change date occurs after dataset!"
         assert (
             pd.Timestamp(change_date) > self.data_in.index.min()
-        ), "Change date before after dataset!"
+        ), "Change date occurs before dataset!"
 
         fix_control_start_dt = fix_control_start_dt or change_date
         fix_control_end_dt = fix_control_end_dt or self.data_in.index.max()
