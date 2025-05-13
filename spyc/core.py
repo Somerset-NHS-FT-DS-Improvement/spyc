@@ -111,8 +111,7 @@ class SPC:
                     pd.Timestamp(key)
                     for key in self.control_line_dates_dict.keys()
                     if pd.Timestamp(key) < pd.Timestamp(change_date)
-                ],
-                default=None,
+                ]
             )
             
             self.control_line_dates_dict[most_recent_key][
