@@ -24,6 +24,9 @@ def df():
 
 
 def test_rule_1_violation(df):
+    """
+    Check "Rule 1 violation" key in output dict.
+    """
 
     series = df["target"]
     cl = df["cl"]
@@ -44,7 +47,9 @@ def test_rule_1_violation(df):
 
 
 def test_rule_2_violation(df):
-
+    """
+    Check "Rule 2 violation" key in output dict.
+    """
     series = df["target"]
     cl = df["cl"]
     lcl = df["lcl"]
@@ -64,7 +69,10 @@ def test_rule_2_violation(df):
 
 
 def test_rule_3_violation(df):
-
+    """
+    Check "Rule 3 violation" key in output dict.
+    """
+    
     series = df["target"]
     cl = df["cl"]
     lcl = df["lcl"]
@@ -84,6 +92,9 @@ def test_rule_3_violation(df):
 
 
 def test_rule_4_violation(df):
+    """
+    Check "Rule 4 violation" key in output dict.
+    """
 
     series = df["target"]
     cl = df["cl"]
@@ -104,6 +115,9 @@ def test_rule_4_violation(df):
 
 
 def test_rule_5_violation(df):
+    """
+    Check "Rule 5 violation" key in output dict.
+    """
 
     series = df["target"]
     cl = df["cl"]

@@ -13,7 +13,7 @@ Returns:
     Dictionary with control chart "process" (observed data), "CL", "UCL", "LCL".
     
 Some charts have additional complexity (eg p-chart) which require further information (such as sample size col).
-These are handled within the function (eg data must have column "sample_size") to maintain only the four inputs.
+These are handled within the function (eg data must have column "sample_size") to maintain the required four inputs.
 """
 
 
@@ -59,7 +59,7 @@ def p_chart(data, target_col, cl_start_dt=None, cl_end_dt=None):
     """
     Calculate control lines for P-chart (with varying control limits if sample size varies).
 
-    data must have column named "sample_size" and the target column must be the proportion!
+    data must have column named "sample_size" and the target column must be the proportion.
     """
 
     data_subset = get_data_subset(data, cl_start_dt, cl_end_dt)

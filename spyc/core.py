@@ -27,7 +27,7 @@ class SPC:
               be removed prior to feeding in the dataset, if present.
 
         Inputs:
-            - data_in (pd.DataFrame): The input data containing the process measurements (with DateTimeIndex).
+            - data_in (pd.DataFrame): The input data containing the process measurements (with DateTime Index).
             - target_col (str): The column name in the data containing the target measurements.
             - fix_control_start_dt (str, optional): If None, reverts to the start of data (defaults to None).
             - fix_control_end_dt (str, optional): If None, reverts to the end of data (defaults to None).
@@ -127,11 +127,13 @@ class SPC:
 
     def add_seasonality(self, season_func: callable, min_data_req: int = 15):
         """
-        Optional Method. Include seasonal variation in control line calculations.
+        Optional Method. Allows seasonal variation to be captured in control lines.
 
         Inputs:
             - season_func (function): A function that accepts DateTime Index and returns unique value
               for each seasonal period.
+            - min_data_req (int): Minimum number of data point per seasonal period to build control line
+              estimates. If below this threshold, seasonality wont be applied.
         """
 
         self.seasonal_func = season_func
@@ -220,9 +222,17 @@ class SPC:
 
         return change_dates_list
 
-    def __data_points_per_season_check(self, df, start_date, end_date) -> bool:
+    def __data_points_per_season_check(self, df: pd.DataFrame, start_date: str, end_date: str) -> bool:
         """
-        Checks sufficient data to estimate control line calculation.
+        Checks sufficient data to estimate control line calculation. Seasonal variation will be
+        ignored if data points per season fall below min_data_req in control line calculation.
+        
+        Only run after add_seasonality called (assumes "season" column exists in df).
+        
+        Inputs:
+            - df (Pandas.DataFrame): Subset of data_in (with "season" column).
+            - start_date (str): Start date for control line calculation (from control_line_dates_dict).
+            - end_date (str): End date for control line calculation (from control_line_dates_dict).
         """
 
         data_points_per_season = (
@@ -247,6 +257,9 @@ class SPC:
     def __calculate_control_lines(self, spc_calc_func: callable) -> None:
         """
         Calculates control lines for each period (single dataset if no process_change_dates set).
+        
+        Inputs:
+            - spc_calc_func (function): A function that calculates the SPC metrics and returns dict.
         """
 
         cl_df = pd.DataFrame()
@@ -339,6 +352,9 @@ class SPC:
     def __test_for_control(self, rules_dict: dict[str, bool]) -> pd.DataFrame:
         """
         Tests dataset for control, using defined SPC rules.
+        
+        Inputs:
+            - rules_dict (dict): Dictionary containing rule name key and corresponding bool value.
         """
 
         out_of_control_dict = {

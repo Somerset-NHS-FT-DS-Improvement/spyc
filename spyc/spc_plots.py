@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 
 
 def filter_out_of_control(data):
+    """
+    Filter SPC data only for points "out of control".
+    """
 
     df_rules = data.filter(regex="^Rule ", axis=1)
     out_of_control = data[df_rules.sum(axis=1) > 0]
@@ -12,6 +15,10 @@ def filter_out_of_control(data):
 
 
 def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
+    
+    """
+    Seaborn SPC plotter.
+    """
 
     sns.set(style="whitegrid")
     fig, ax = plt.subplots(figsize=figsize, dpi=600)
@@ -75,7 +82,9 @@ def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
 
 
 def add_control_lines(fig, data):
-
+    """
+    Add control/upper/lower lines to Plotly trace.
+    """
     fig.add_trace(
         go.Scatter(
             x=data.index,
@@ -91,7 +100,7 @@ def add_control_lines(fig, data):
             y=data["UCL"],
             mode="lines",
             line=dict(color="#d1495b", dash="dot"),
-            name="Upper Control Limit",
+            name="Control Limits",
         )
     )
     fig.add_trace(
@@ -100,12 +109,15 @@ def add_control_lines(fig, data):
             y=data["LCL"],
             mode="lines",
             line=dict(color="#d1495b", dash="dot"),
-            name="Lower Control Limit",
+            name=None,
         )
     )
 
 
 def add_process_lines(fig, data, y_col, line_name):
+    """
+    Add target measure to Plotly trace (line chart).
+    """
     fig.add_trace(
         go.Scatter(
             x=data.index,
@@ -118,6 +130,9 @@ def add_process_lines(fig, data, y_col, line_name):
 
 
 def add_out_of_control_points(fig, signals_data, y_col):
+    """
+    Add out of control points to Plotly trace.
+    """
 
     rule_columns = [col for col in signals_data.columns if col.startswith("Rule")]
 
@@ -142,7 +157,11 @@ def add_out_of_control_points(fig, signals_data, y_col):
     )
 
 
-def plotly_chart(data, figure_title="SPC chart"):
+def plotly_chart(data, figure_title=None):
+    
+    """
+    Plotly SPC plotter.
+    """
 
     fig = go.Figure()
 

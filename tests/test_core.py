@@ -21,6 +21,9 @@ def df():
 
 
 def test_spc_initialisation(df):
+    """
+    Test expected outputs during SPC initialisation.
+    """
 
     spc = SPC(data_in=df, target_col="measurement")
 
@@ -36,6 +39,9 @@ def test_spc_initialisation(df):
 
 
 def test_add_process_change_date(df):
+    """
+    Test expected output from control_line_dates_dict after calling add_process_change_date.
+    """
 
     spc = SPC(data_in=df, target_col="measurement")
 
@@ -56,6 +62,9 @@ def test_add_process_change_date(df):
 
 
 def test_add_seasonality(df):
+    """
+    Test expected outputs after calling add_seasonality.
+    """
 
     spc = SPC(data_in=df, target_col="measurement")
 
@@ -69,6 +78,9 @@ def test_add_seasonality(df):
 
 
 def test_calculate_spc(df):
+    """
+    Test expected outputs after calling calculate_spc and passing in custom SPC function.
+    """
 
     spc = SPC(data_in=df, target_col="measurement")
 

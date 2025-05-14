@@ -5,7 +5,10 @@ from spyc.helpers import convert_to_timestamp, get_data_subset
 
 
 def test_convert_to_timestamp():
-    # Converting dict. of dates to pd.Timestep test
+    """
+    Converting dict. of dates to pd.Timestep test
+    """
+    
     input_dict = {
         "2023-01-01": {"cl_start_data": "2023-01-01", "cl_end_data": "2023-01-03"}
     }
@@ -22,7 +25,10 @@ def test_convert_to_timestamp():
 
 
 def test_get_data_subset():
-    # Create a sample dataframe for testing
+    """
+    Subset a sample dataframe for testing.
+    """
+
     data = {
         "date": pd.date_range(start="2023-01-01", periods=100, freq="D"),
         "measurement": np.random.randn(100),
