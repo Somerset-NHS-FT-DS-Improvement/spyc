@@ -72,7 +72,7 @@ def test_rule_3_violation(df):
     """
     Check "Rule 3 violation" key in output dict.
     """
-    
+
     series = df["target"]
     cl = df["cl"]
     lcl = df["lcl"]

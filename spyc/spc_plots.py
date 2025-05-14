@@ -15,7 +15,6 @@ def filter_out_of_control(data):
 
 
 def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
-    
     """
     Seaborn SPC plotter.
     """
@@ -158,7 +157,6 @@ def add_out_of_control_points(fig, signals_data, y_col):
 
 
 def plotly_chart(data, figure_title=None):
-    
     """
     Plotly SPC plotter.
     """

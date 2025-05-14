@@ -1,23 +1,31 @@
 import numpy as np
 
 
-def _rules_func(input_series: pd.Series, cl: pd.Series, lcl: pd.Series, ucl: pd.Series, rules_to_test_dict: dict[str, bool] = None) -> dict:
+def _rules_func(
+    input_series: pd.Series,
+    cl: pd.Series,
+    lcl: pd.Series,
+    ucl: pd.Series,
+    rules_to_test_dict: dict[str, bool] = None,
+) -> dict:
     """
     Set of five rules to test for process control.
-    
+
     Inputs:
         - input_series (Pandas.Series): Target variable being tracked.
         - cl (Pandas.Series): Control line.
         - lcl (Pandas.Series): Lower control line.
         - ucl (Pandas.Series): Upper control line.
         - rules_to_test_dict (dict): Dictionary with rules being tested.
-        
+
     Todo:
         - Using subsets to estimate sigma (rules 4-5).
         - Think of faster approach.
-    
+
     """
-    sigma = (ucl - cl) / 3  # Calculate 1 sigma (Pandas.Series), based on upper control and center line
+    sigma = (
+        ucl - cl
+    ) / 3  # Calculate 1 sigma (Pandas.Series), based on upper control and center line
     violations = {}  # Store violations as dictionary (list of dates as values).
 
     # Rule 1: Point outside the +/- 3 sigma limits

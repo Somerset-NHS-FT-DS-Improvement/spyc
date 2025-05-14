@@ -8,7 +8,7 @@ def test_convert_to_timestamp():
     """
     Converting dict. of dates to pd.Timestep test
     """
-    
+
     input_dict = {
         "2023-01-01": {"cl_start_data": "2023-01-01", "cl_end_data": "2023-01-03"}
     }
