@@ -20,8 +20,7 @@ def _rules_func(
         - rules_to_test_dict (dict): Dictionary with rules being tested.
 
     Todo:
-        - Using subsets to estimate sigma (rules 4-5).
-        - Think of faster approach.
+        - Optimsation around using pd.Series and taking subsets of the data to estimate sigma etc.
 
     """
     sigma = (
