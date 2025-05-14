@@ -109,6 +109,7 @@ def add_control_lines(fig, data):
             mode="lines",
             line=dict(color="#d1495b", dash="dot"),
             name=None,
+            showlegend=False
         )
     )
 
@@ -179,7 +180,7 @@ def plotly_chart(data, figure_title=None):
         ),
         hovermode="x unified",
         xaxis=dict(
-            title="Date",
+            title=None,
             showgrid=True,
             gridcolor="#dde6ed",
             range=[data.index.min(), data.index.max()],
