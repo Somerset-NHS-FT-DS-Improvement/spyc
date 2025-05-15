@@ -78,7 +78,7 @@ class SPC:
         fix_control_end_dt: str | None = None,
     ) -> None:
         """
-        Optional Method. Allows control lines to be re-calculated following a systematic change to the measured process.
+        Allows control lines to be re-calculated following a systematic change to the measured process.
 
         Inputs:
             - change_date (str or pd.Timestamp): The date when the process change occurred.
@@ -128,7 +128,7 @@ class SPC:
 
     def add_seasonality(self, season_func: callable, min_data_req: int = 15):
         """
-        Optional Method. Allows seasonal variation to be captured in control lines.
+        Allows seasonal variation to be captured in control lines.
 
         Inputs:
             - season_func (function): A function that accepts DateTime Index and returns unique value
@@ -160,7 +160,7 @@ class SPC:
         Convenience function for calculating control lines (including re-calculation, if specified) and
         tests data for control (up to 5 tests, defined in control_rules.py).
 
-        Not all rules are appropriate for all charts.
+        Note: not all rules make sense for different charts.
 
         Inputs:
             - spc_calc_func (function): A function that calculates the SPC metrics. It must return a dictionary
