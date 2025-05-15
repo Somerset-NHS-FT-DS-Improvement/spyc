@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sfttoolbox"
+name = "spyc"
 version = "0.1.0"
 authors = [
     { name="Ben Holdsworth", email="Benjamin.Holdsworth@somersetft.nhs.uk" },
@@ -32,8 +32,8 @@ dev = [
     "isort>=5.13.2"
 ]
 [project.urls]
-Homepage = "https://github.com/SomersetNHSFoundationTrust/sfttoolbox"
-Issues = "https://github.com/SomersetNHSFoundationTrust/sfttoolbox/issues"
+Homepage = "https://github.com/Somerset-NHS-FT-DS-Improvement/spyc"
+Issues = "https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
