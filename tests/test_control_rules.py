@@ -1,6 +1,7 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
+
 from spyc.control_rules import _rules_func
 
 

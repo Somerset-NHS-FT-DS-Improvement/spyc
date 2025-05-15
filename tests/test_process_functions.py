@@ -1,9 +1,9 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
 
 # from .helpers import get_data_subset
-from spyc.spc_functions import x_chart, mr_chart, p_chart
+from spyc.spc_functions import mr_chart, p_chart, x_chart
 
 
 @pytest.fixture

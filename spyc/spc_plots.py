@@ -1,7 +1,7 @@
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.io as pio
 import seaborn as sns
-import matplotlib.pyplot as plt
 
 
 def filter_out_of_control(data):
@@ -109,7 +109,7 @@ def add_control_lines(fig, data):
             mode="lines",
             line=dict(color="#d1495b", dash="dot"),
             name=None,
-            showlegend=False
+            showlegend=False,
         )
     )
 

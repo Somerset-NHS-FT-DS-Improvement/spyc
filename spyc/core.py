@@ -1,6 +1,7 @@
+import warnings
+
 import numpy as np
 import pandas as pd
-import warnings
 
 from .control_rules import _rules_func
 from .helpers import convert_to_timestamp

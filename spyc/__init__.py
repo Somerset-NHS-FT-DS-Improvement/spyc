@@ -1,3 +1,2 @@
+from . import spc_functions, spc_plots
 from .core import SPC
-from . import spc_functions
-from . import spc_plots
