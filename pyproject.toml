@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "spyc"
 version = "0.1.0"
 authors = [
-    { name="Ben Holdsworth", email="benjamin.Holdsworth@somersetft.nhs.uk" },
+    { name="Ben Holdsworth", email="Benjamin.Holdsworth@somersetft.nhs.uk" },
     { name="SFT Data Science", email="Data.Science@somersetft.nhs.uk"}
 ]
 description = "Statistical Process Control library for SFT analytics."
