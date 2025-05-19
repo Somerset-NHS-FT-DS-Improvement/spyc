@@ -4,17 +4,7 @@ import plotly.io as pio
 import seaborn as sns
 
 
-def filter_out_of_control(data):
-    """
-    Filter SPC data only for points "out of control".
-    """
-
-    df_rules = data.filter(regex="^Rule ", axis=1)
-    out_of_control = data[df_rules.sum(axis=1) > 0]
-    return out_of_control
-
-
-def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
+def seaborn_chart(data, figure_title=None, yaxis_label="Measure", figsize=(15, 5)):
     """
     Seaborn SPC plotter.
     """
@@ -38,7 +28,7 @@ def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
     )
     ax.plot(data.index, data["LCL"], color="#d1495b", label=None, linestyle="--")
 
-    out_of_control = filter_out_of_control(data)
+    out_of_control = _filter_out_of_control(data)
     ax.scatter(
         out_of_control.index,
         out_of_control["process"],
@@ -66,7 +56,7 @@ def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
 
     ax.set_title(figure_title)
     ax.set_xlabel(None)
-    ax.set_ylabel("Measure", fontsize=12)
+    ax.set_ylabel(yaxis_label, fontsize=12)
     ax.legend(
         loc="upper center",
         bbox_to_anchor=(0.5, -0.15),
@@ -80,7 +70,55 @@ def seaborn_chart(data, figure_title=None, figsize=(15, 5)):
     return fig, ax
 
 
-def add_control_lines(fig, data):
+def plotly_chart(data, figure_title=None, yaxis_label="Measure"):
+    """
+    Plotly SPC plotter.
+    """
+
+    fig = go.Figure()
+
+    out_of_control = _filter_out_of_control(data)
+    _add_out_of_control_points(fig, out_of_control, "process")
+    _add_process_lines(fig, data, "process", line_name="Process")
+    _add_control_lines(fig, data)
+
+    fig.update_layout(
+        title=figure_title,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.3,
+            xanchor="center",
+            x=0.5,
+        ),
+        hovermode="x unified",
+        xaxis=dict(
+            title=None,
+            showgrid=True,
+            gridcolor="#dde6ed",
+            range=[data.index.min(), data.index.max()],
+        ),
+        yaxis=dict(
+            title=yaxis_label,
+            showgrid=True,
+            gridcolor="#dde6ed",
+        ),
+    )
+
+    return fig
+
+
+def _filter_out_of_control(data):
+    """
+    Filter SPC data only for points "out of control".
+    """
+
+    df_rules = data.filter(regex="^Rule ", axis=1)
+    out_of_control = data[df_rules.sum(axis=1) > 0]
+    return out_of_control
+
+
+def _add_control_lines(fig, data):
     """
     Add control/upper/lower lines to Plotly trace.
     """
@@ -114,7 +152,7 @@ def add_control_lines(fig, data):
     )
 
 
-def add_process_lines(fig, data, y_col, line_name):
+def _add_process_lines(fig, data, y_col, line_name):
     """
     Add target measure to Plotly trace (line chart).
     """
@@ -129,7 +167,7 @@ def add_process_lines(fig, data, y_col, line_name):
     )
 
 
-def add_out_of_control_points(fig, signals_data, y_col):
+def _add_out_of_control_points(fig, signals_data, y_col):
     """
     Add out of control points to Plotly trace.
     """
@@ -155,41 +193,3 @@ def add_out_of_control_points(fig, signals_data, y_col):
             ],
         )
     )
-
-
-def plotly_chart(data, figure_title=None):
-    """
-    Plotly SPC plotter.
-    """
-
-    fig = go.Figure()
-
-    out_of_control = filter_out_of_control(data)
-    add_out_of_control_points(fig, out_of_control, "process")
-    add_process_lines(fig, data, "process", line_name="Process")
-    add_control_lines(fig, data)
-
-    fig.update_layout(
-        title=figure_title,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=-0.3,
-            xanchor="center",
-            x=0.5,
-        ),
-        hovermode="x unified",
-        xaxis=dict(
-            title=None,
-            showgrid=True,
-            gridcolor="#dde6ed",
-            range=[data.index.min(), data.index.max()],
-        ),
-        yaxis=dict(
-            title="Measure",
-            showgrid=True,
-            gridcolor="#dde6ed",
-        ),
-    )
-
-    return fig
