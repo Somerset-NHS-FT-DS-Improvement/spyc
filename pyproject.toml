@@ -9,7 +9,7 @@ authors = [
     { name="Ben Holdsworth", email="Benjamin.Holdsworth@somersetft.nhs.uk" },
     { name="SFT Data Science", email="Data.Science@somersetft.nhs.uk"}
 ]
-description = "Statistical Process Control library for SFT analytics."
+description = "A Python library for Statistical Process Control (SPC) analytics."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
