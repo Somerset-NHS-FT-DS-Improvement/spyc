@@ -13,7 +13,7 @@ The package supports a range of SPC chart types (including X, moving range, and 
 To install spyc using pip:
 
 ```bash
-pip install spyc
+pip install spychart
 ```
 
 ## Simple Usage
