@@ -39,7 +39,7 @@ example_data = spc_example.calculate_spc(
 fig, ax = spc_plots.seaborn_chart(example_data)
 ```
 
-<img src="images/xchart_example.png" width="100%" />
+<img src="https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/blob/main/images/xchart_example.png" width="100%" />
 
 _For more examples, refer to the [Example Notebook](example_notebook.ipynb)_
 
