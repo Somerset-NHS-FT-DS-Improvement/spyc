@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="images/data_science_logo.jpg" alt="SFT Data Science Logo" width="50" height="90"/>
+  <img src="https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/blob/main/images/data_science_logo.jpg" alt="SFT Data Science Logo" width="50" height="90"/>
 </p>
 
 # spychart
