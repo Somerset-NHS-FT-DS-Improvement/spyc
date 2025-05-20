@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spychart"
-version = "0.1.3"
+version = "0.1.4"
 authors = [
     { name="Ben Holdsworth", email="Benjamin.Holdsworth@somersetft.nhs.uk" },
     { name="SFT Data Science", email="Data.Science@somersetft.nhs.uk"}
