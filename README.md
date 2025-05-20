@@ -41,7 +41,7 @@ fig, ax = spc_plots.seaborn_chart(example_data)
 
 <img src="https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/blob/main/images/xchart_example.png" width="100%" />
 
-_For more examples, refer to the [Example Notebook](example_notebook.ipynb)_
+_For more examples, refer to the [Example Notebook](https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/blob/main/example_notebook.ipynb)_
 
 ## Contributing
 
