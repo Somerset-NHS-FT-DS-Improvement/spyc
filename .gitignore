@@ -1,2 +1,5 @@
+*.py[co]
 __pycache__
-.idea/
+*.idea
+.pytest_cache
+**/.ipynb_checkpoints/

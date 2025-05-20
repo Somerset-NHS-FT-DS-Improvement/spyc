@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spychart"
+version = "0.1.0"
+authors = [
+    { name="Ben Holdsworth", email="Benjamin.Holdsworth@somersetft.nhs.uk" },
+    { name="SFT Data Science", email="Data.Science@somersetft.nhs.uk"}
+]
+description = "A Python library for Statistical Process Control (SPC) analytics."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "numpy>=1.26.4",
+    "pandas>=2.2.3",
+    "plotly>=5.24.1",
+    "seaborn>=0.13.2",
+    "matplotlib>=3.10.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "black>=24.2.0",
+    "isort>=5.13.2"
+]
+[project.urls]
+Homepage = "https://github.com/Somerset-NHS-FT-DS-Improvement/spyc"
+Issues = "https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["notebooks"]
