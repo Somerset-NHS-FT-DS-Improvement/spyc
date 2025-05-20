@@ -1,16 +1,16 @@
 <p align="left">
-  <img src="images/logo.png" alt="SPyC Logo" width="50%"/>
+  <img src="images/logo.png" alt="SFT Data Science Logo" width="50%"/>
 </p>
 
-# SPyC
+# spychart
 
-SPyC is a Python library for Statistical Process Control (SPC), developed to support analytics at Somerset Foundation Trust. It provides a centralised and flexible framework for monitoring healthcare time series data.
+spychart is a Python library for Statistical Process Control (SPC), developed to support analytics at Somerset Foundation Trust. It provides a centralised and flexible framework for monitoring healthcare time series data.
 
-The package supports a range of SPC chart types (including X, moving range, and p-charts) and can be extended further with custom functions. It supports multiple changepoints, allowing control line re-calculation following system changes (e.g., ward reconfigurations). SPyC can also account for seasonal variation by calculating separate control limits for each seasonal period, negating the need to separate data into multiple charts.
+The package supports a range of SPC chart types (including X, moving range, and p-charts) and can be extended further with custom functions. It supports multiple changepoints, allowing control line re-calculation following system changes (e.g., ward reconfigurations). spychart can also account for seasonal variation by calculating separate control limits for each seasonal period, negating the need to separate data into multiple charts.
 
 ## Installation
 
-To install spyc using pip:
+To install spychart using pip:
 
 ```bash
 pip install spychart
@@ -19,7 +19,7 @@ pip install spychart
 ## Simple Usage
 
 ```python
-from spyc import SPC, spc_functions, spc_plots
+from spychart import SPC, spc_functions, spc_plots
 
 # Instantiate SPC object
 spc_example = SPC(data_in=df, # df is a Pandas.DataFrame (with DateTimeIndex)
