@@ -1,7 +1,7 @@
 <p align="left">
-  <img src="https://raw.githubusercontent.com/Somerset-NHS-FT-DS-Improvement/spyc/refs/heads/main/images/data_science_logo.jpg" alt="SFT Data Science Logo" width="50" height="90"/>
+  <img src="https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/blob/main/images/data_science_logo.jpg?raw=true" alt="SFT Data Science Logo" width="50" height="90"/>
 </p>
-https://github.com/Somerset-NHS-FT-DS-Improvement/spyc/blob/main/images/data_science_logo.jpg?raw=true
+
 # spychart
 
 spychart is a Python library for Statistical Process Control (SPC), developed to support analytics at Somerset Foundation Trust. It provides a centralised and flexible framework for monitoring healthcare time series data.
