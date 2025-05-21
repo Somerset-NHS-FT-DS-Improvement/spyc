@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from spyc.helpers import convert_to_timestamp, get_data_subset
+from spychart.helpers import convert_to_timestamp, get_data_subset
 
 
 def test_convert_to_timestamp():

@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from spyc import SPC
-from spyc.helpers import convert_to_timestamp, get_data_subset
+from spychart import SPC
+from spychart.helpers import convert_to_timestamp, get_data_subset
 
 
 @pytest.fixture
